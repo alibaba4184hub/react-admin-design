@@ -1,6 +1,8 @@
 export interface LoginParams {
   username: string
   password: string
+  loginType: string
+  captchaUid: string
 }
 
 export interface UserInfo {

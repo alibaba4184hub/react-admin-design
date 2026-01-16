@@ -15,10 +15,13 @@ const menu = createSlice({
     },
     updateCollapse: (state, action) => {
       state.isCollapse = action.payload
+    },
+    clearMenus: state => {
+      state.menuList = []
     }
   }
 })
 
-export const { setMenuList, updateCollapse } = menu.actions
+export const { setMenuList, updateCollapse, clearMenus } = menu.actions
 
 export default menu.reducer

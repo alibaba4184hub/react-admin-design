@@ -1,4 +1,6 @@
-export const TOKEN_KEY = 'TOKEN_KEY'
+export const TOKEN_KEY = 'accessToken'
+
+export const ADMIN_TYPE = 'adminType'
 
 export const LOCALE_KEY = 'LOCALE_KEY'
 

@@ -17,6 +17,7 @@ export interface UserState {
   token?: string
   sessionTimeout?: boolean
   lastUpdateTime: number
+  adminType: string | undefined
 }
 
 export interface MenuOptions {

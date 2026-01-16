@@ -6,14 +6,23 @@ interface LoginParams {
 }
 
 // User login api
-export function loginApi(data: LoginParams): Promise<any> {
+export function loginApi(data: LoginParams, csrfToken: string): Promise<any> {
   return service({
-    url: '/login',
+    url: '/login/signin',
     method: 'post',
-    data
+    data,
+    headers: {
+      'X-CSRF-Token': csrfToken
+    }
   })
 }
-
+// 获取MD5加密token
+export const getCsrf = () => {
+  return service<any>({
+    url: 'common/csrf/create',
+    method: 'get'
+  })
+}
 // Get User info
 export function getUserInfo(): Promise<any> {
   return service({
@@ -21,12 +30,19 @@ export function getUserInfo(): Promise<any> {
     method: 'get'
   })
 }
-
+export const getShopMyShop = (params: object) => {
+  return service({
+    url: 'merchant/shop/myShop',
+    method: 'get',
+    params,
+    noErrorTip: true
+  })
+}
 // User logout api
 export function logoutApi() {
   return service({
-    url: '/logout',
-    method: 'get'
+    url: 'login/logout',
+    method: 'post'
   })
 }
 
@@ -36,5 +52,19 @@ export function getTableList(params: any) {
     url: '/table/getTableList',
     method: 'get',
     params
+  })
+}
+
+export const getMineInfo = () => {
+  return service({
+    url: 'authority/adminUser/mineDetail',
+    method: 'get'
+  })
+}
+
+export const getAdminBase = () => {
+  return service({
+    url: 'setting/config/getAdminBase',
+    method: 'get'
   })
 }

@@ -11,8 +11,8 @@ export function openWindow(
   const { target = '__blank', noopener = true, noreferrer = true } = opt || {}
   const feature: string[] = []
 
-  noopener && feature.push('noopener=yes')
-  noreferrer && feature.push('noreferrer=yes')
+  noopener ? feature.push('noopener=yes') : null
+  noreferrer ? feature.push('noreferrer=yes') : null
 
   window.open(url, target, feature.join(','))
 }
@@ -41,4 +41,32 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
     src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
   }
   return src
+}
+/**
+ *
+ * @param data
+ * @returns  {AnyObject}
+ */
+export const formatArguments = (data: any) => {
+  const result: any = {}
+  if (typeof data === 'object') {
+    const dataKeys = Object.keys(data)
+    for (const key of dataKeys) {
+      const value = data[key]
+      // 检查值是否为 null 或 undefined
+      if (value === null || value === undefined || value === '') {
+        continue
+      }
+      if (typeof value === 'object') {
+        // 如果值是数组，检查其长度是否为 0
+        if (Array.isArray(value) && value.length === 0) {
+          continue
+        } else if (Object.keys(value).length === 0) {
+          continue
+        }
+      }
+      result[key] = value
+    }
+  }
+  return result
 }

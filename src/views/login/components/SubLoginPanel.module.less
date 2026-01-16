@@ -1,0 +1,105 @@
+.sub-login-panel {
+  background-color: #ffffff;
+  padding: 20px 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .sub-login-back {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    gap: 2px;
+    cursor: pointer;
+    .sub-login-back__icon {
+      font-size: 14px;
+      padding-right: 5px;
+    }
+  }
+  .sub-login-panel__title {
+    font-size: 22px;
+    font-weight: bold;
+    .right-item {
+      font-size: 14px;
+    }
+  }
+
+  .sub-login-panel__desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5b5b5b;
+
+    & > span {
+      font-weight: bold;
+    }
+  }
+
+  .sub-login-panel__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .shop-item {
+      cursor: pointer;
+      border: 0.6px solid #e0e0e0;
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 10px;
+
+      .left-item {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+
+        .left-image {
+          width: 60px;
+          height: 60px;
+          border-radius: 10px;
+        }
+
+        .left-info {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+
+          .left-title {
+            font-size: 16px;
+            font-weight: bold;
+          }
+
+          .left-name {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #5b5b5b;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .right-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    &.top {
+      margin-top: -8px;
+    }
+  }
+  .shop-list-min-height {
+    min-height: 120px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .select-shop-warp {
+    padding: 0;
+  }
+}

@@ -8,7 +8,8 @@ import {
   type APP_CONFIG_KEY,
   type APP_TAGS_KEY,
   APP_LOCAL_CACHE_KEY,
-  APP_SESSION_CACHE_KEY
+  APP_SESSION_CACHE_KEY,
+  ADMIN_TYPE
 } from '@/enums/cacheEnum'
 import { createLocalStorage, createSessionStorage } from '@/utils/cache'
 import { DEFAULT_CACHE_TIME } from '@/settings/encryptionSetting'
@@ -16,6 +17,7 @@ import type { UserInfo } from '@/types'
 
 interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined
+  [ADMIN_TYPE]: string | null | undefined
   [USER_INFO_KEY]: UserInfo
   [APP_CONFIG_KEY]: AppConfig
   [APP_TAGS_KEY]: RouteObject[]
