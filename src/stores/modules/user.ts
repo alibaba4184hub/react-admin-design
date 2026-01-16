@@ -78,6 +78,9 @@ const user = createSlice({
     }
   }
 })
+// 解构createAction
+const { setToken, setUserInfo, setAdminType, setSessionTimeout, resetState, setConfig, setShopInfo, setVendorInfo } =
+  user.actions
 const updateUserInfo = () => {
   return async dispatch => {
     try {
@@ -88,7 +91,6 @@ const updateUserInfo = () => {
       if (localStorage.getItem('adminType') == 'shop') {
         const result2 = await getShopInfo()
         dispatch(setShopInfo(result2))
-
         localStorage.setItem('shopInfo', JSON.stringify(result))
       }
       if (localStorage.getItem('adminType') == 'vendor') {
@@ -116,6 +118,6 @@ const updateConfig = () => {
   }
 }
 
-export const { setToken, setUserInfo, setAdminType, setSessionTimeout, resetState } = user.actions
-export { updateUserInfo, updateConfig }
+export { setToken, setUserInfo, setAdminType, setSessionTimeout, resetState, updateUserInfo, updateConfig }
+
 export default user.reducer

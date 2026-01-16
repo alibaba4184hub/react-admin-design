@@ -60,9 +60,6 @@ const LoginPage: FC = () => {
         },
         csrfToken
       )
-      if (userInfo) {
-        message.success('登陆成功！')
-      }
     } catch (error) {
       message.error((error as unknown as Error).message)
     } finally {
@@ -84,26 +81,19 @@ const LoginPage: FC = () => {
       dispatch(setToken(data?.token))
       dispatch(setAdminType(data?.adminType))
       setShowPanel(true)
-      return afterLoginAction(goHome)
+      return afterLoginAction()
     } catch (error) {
       return Promise.reject(error)
     }
   }
 
-  const afterLoginAction = async (goHome?: boolean): Promise<UserInfo | null> => {
+  const afterLoginAction = async (): Promise<UserInfo | null> => {
     if (!getToken()) return null
 
     const userInfo = await getShopInfoAction()
 
     if (sessionTimeout) {
       dispatch(setSessionTimeout(false))
-    } else {
-      // const redirect = searchParams.get('redirect')
-      // if (redirect) {
-      //   navigate(redirect)
-      // } else {
-      //   goHome && navigate(userInfo?.homePath || '/home')
-      // }
     }
 
     return userInfo
