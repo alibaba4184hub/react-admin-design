@@ -42,7 +42,9 @@ service.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   }
 
   config.params = formatArguments(config.params)
-  ;(config as Recordable).headers['Content-Type'] = 'application/json'
+  if (!config.headers['Content-Type']) {
+    ;(config as Recordable).headers['Content-Type'] = 'application/json'
+  }
   return config
 }, handleError)
 

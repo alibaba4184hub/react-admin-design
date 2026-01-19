@@ -34,7 +34,7 @@
     "classnames": "^2.3.2",
     "cropperjs": "^1.6.1",
     "crypto-js": "^4.2.0",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.13",
     "dom-to-image": "^2.6.0",
     "echarts": "^5.4.3",
     "file-saver": "^2.0.5",

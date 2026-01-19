@@ -70,3 +70,33 @@ export const formatArguments = (data: any) => {
   }
   return result
 }
+
+
+type DictDataType = Record<string, any>;
+
+/**
+ * 获得字典数据的文本展示
+ *
+ * @param map 字典数据的key和value的映射
+ * @param dictData 字典数据
+ * @param value 字典数据的值
+ * @return 字典名称
+ */
+export const getDictLabel = ({
+    map = { label: "label", value: "value" },
+    dictData,
+    value
+}: {
+    map?: { label: string; value: string };
+    dictData: DictDataType[];
+    value: string | number | boolean;
+}): string => {
+    const dictOptions: DictDataType[] = dictData;
+    let dictLabel = "";
+    dictOptions.forEach((dict: DictDataType) => {
+        if (dict[map.value] == value) {
+            dictLabel = dict[map.label];
+        }
+    });
+    return dictLabel;
+};

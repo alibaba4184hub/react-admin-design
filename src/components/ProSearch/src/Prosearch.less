@@ -1,0 +1,71 @@
+// ProSearch.less
+.pro-advanced-block-search-form,
+.pro-advanced-search-form {
+  :global {
+    .ant-form-item {
+      margin-bottom: 15px;
+      margin-right: 0;
+    }
+  }
+}
+
+.pro-advanced-block-search-form {
+  :global {
+    .ant-form-item {
+      width: 100%;
+    }
+  }
+}
+
+// flex 模式下的样式
+.pro-advanced-search-form {
+  :global {
+    .ant-form-item {
+      display: flex;
+    }
+
+    .ant-form-item-label {
+      width: auto;
+      flex: none;
+    }
+
+    .ant-form-item-control {
+      flex: 1;
+    }
+  }
+}
+
+// 通用样式
+.pro-advanced-search-form,
+.pro-advanced-block-search-form {
+  :global {
+    .ant-form-item-label > label {
+      line-height: 32px;
+      padding-right: 8px;
+    }
+  }
+}
+
+.pro-search-action {
+  display: block;
+  white-space: nowrap;
+}
+
+.ui-color-link-light {
+  color: rgb(58, 58, 250);
+  cursor: pointer;
+}
+
+.margin-left-8 {
+  margin-left: 8px;
+}
+
+// 操作按钮栏样式
+.btn-box-more {
+  :global {
+    .ant-form-item-control {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
