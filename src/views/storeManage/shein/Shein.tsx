@@ -9,7 +9,6 @@ import {
   DatePicker,
   Select,
   message,
-  Upload,
   Col,
   Modal,
   Form,
@@ -223,11 +222,6 @@ const SheinManage: React.FC = () => {
       }
     })
   }
-  const tableSelection: TableProps<any>['rowSelection'] = {
-    onChange: (selectedRowKeys: any[]) => {
-      console.log(selectedRowKeys)
-    }
-  }
   const clearUrlParams = () => {
     // 获取当前页面的完整URL
     let currentUrl = window.location.href
@@ -312,7 +306,7 @@ const SheinManage: React.FC = () => {
         {/* 默认展示的搜索项 */}
         <Col md={8} sm={24}>
           <Form.Item label='店铺名称' name='keyword'>
-            <Input placeholder='请输入店铺名称' onKeyPress={handleKeyPress} />
+            <Input allowClear placeholder='请输入店铺名称' onKeyPress={handleKeyPress} />
           </Form.Item>
         </Col>
 
@@ -386,7 +380,6 @@ const SheinManage: React.FC = () => {
       {/* 表格查询 */}
       <Table
         rowKey='id'
-        rowSelection={tableSelection}
         columns={columns}
         dataSource={tableData}
         loading={tableLoading}

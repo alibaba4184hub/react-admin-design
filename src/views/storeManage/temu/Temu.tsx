@@ -291,11 +291,7 @@ const TemuManage: React.FC = () => {
       }
     })
   }
-  const tableSelection: TableProps<any>['rowSelection'] = {
-    onChange: (selectedRowKeys: any[]) => {
-      console.log(selectedRowKeys)
-    }
-  }
+
   useEffect(() => {
     fetchData()
   }, [tableQuery])
@@ -416,7 +412,6 @@ const TemuManage: React.FC = () => {
       {/* 表格查询 */}
       <Table
         rowKey='id'
-        rowSelection={tableSelection}
         columns={columns}
         dataSource={tableData}
         loading={tableLoading}
