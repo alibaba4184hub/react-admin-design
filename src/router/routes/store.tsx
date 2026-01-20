@@ -31,6 +31,15 @@ const CompoRoute: RouteObject = {
         title: 'SHEIN',
         key: 'sheinBind'
       }
+    },
+    {
+      path: 'tiktok',
+      name: 'Tiktok',
+      element: LazyLoad(lazy(() => import('@/views/storeManage/tiktok/Tiktok'))),
+      meta: {
+        title: 'TIKTOK',
+        key: 'tiktokBind'
+      }
     }
   ]
 }
