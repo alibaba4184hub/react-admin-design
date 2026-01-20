@@ -22,6 +22,15 @@ const CompoRoute: RouteObject = {
         title: 'TEMU',
         key: 'temuBind'
       }
+    },
+    {
+      path: 'shein',
+      name: 'Shein',
+      element: LazyLoad(lazy(() => import('@/views/storeManage/shein/Shein'))),
+      meta: {
+        title: 'SHEIN',
+        key: 'sheinBind'
+      }
     }
   ]
 }

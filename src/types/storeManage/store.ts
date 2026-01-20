@@ -19,21 +19,43 @@ export interface StoreFilterState {
   updateTime?: string
 }
 export interface ShopFormState {
-  salePlatformId?: number | null;
-  storeTitle?: string;
-  storeType?: number | null;
-  storeCode?: string;
-  sdsStoreCode?: string;
-  sellerId?: string;
-  accessTokenCn?: string;
-  accessTokenGlobal?: string;
-  accessTokenUs?: string;
-  accessTokenEu?: string;
-  syncOrder?: number | null;
-  syncOrderDay?: number | null;
-  deliveryType?: number | null;
-  autoDeliveryHour?: number | null;
-  syncOrderStatusList?: number[] | null;
-  syncOrderStatusUpdate?: number | null;
-  status?:number | null;
+  salePlatformId?: number | null
+  storeTitle?: string
+  storeType?: number | null
+  storeCode?: string
+  sdsStoreCode?: string
+  sellerId?: string
+  accessTokenCn?: string
+  accessTokenGlobal?: string
+  accessTokenUs?: string
+  accessTokenEu?: string
+  syncOrder?: number | null
+  syncOrderDay?: number | null
+  deliveryType?: number | null
+  autoDeliveryHour?: number | null
+  syncOrderStatusList?: number[] | null
+  syncOrderStatusUpdate?: number | null
+  status?: number | null
+}
+
+export interface AddStoreProps {
+  act?: string
+  id?: string | number
+  [key: string]: any
+  submitCallback?: (result: any, isClose?: boolean) => void
+  setConfirmLoading?: (loading: boolean) => void
+  confirmLoading?: boolean
+  okType?: (enabled: boolean) => void
+  visible?: boolean
+  isDialog?: boolean
+}
+
+export interface AddStoreRef {
+  onFormSubmit: () => Promise<void>
+}
+
+export interface PageState {
+  current: number
+  pageSize: number
+  salePlatformId: number
 }

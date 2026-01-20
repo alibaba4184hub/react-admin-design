@@ -77,3 +77,43 @@ export const orderMarkDict = [
     value: 0
   }
 ]
+
+// shein字典
+// 店铺类型2
+export const storeTypeDict = [
+  {
+    label: '半托管',
+    value: 0
+  },
+  // {
+  //     label: '自运营',
+  //     value:2
+  // },
+  {
+    label: '全托管',
+    value: 1
+  }
+]
+
+// 同步订单状态字典
+export const asyncOrderStatusDict = [
+  {
+    label: '待处理',
+    value: 0
+  },
+  {
+    label: '待发货',
+    value: 1
+  }
+]
+// 订单状态更新字典
+export const orderStatusUpdateDict = [
+  {
+    label: '仅导出收件人地址信息',
+    value: 0
+  },
+  {
+    label: '导出收件人地址并将订单状态流转到待发货',
+    value: 1
+  }
+]

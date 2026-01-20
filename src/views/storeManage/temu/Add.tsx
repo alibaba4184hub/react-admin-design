@@ -1,27 +1,10 @@
 // AddStore.tsx - 修复版本
-import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
-import { Form, Input, Select, Button, message, Row, Col, Radio, InputNumber } from 'antd'
+import { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
+import { Form, Input, Select, message, Row, Col, Radio, InputNumber } from 'antd'
 import { ShopFormState } from '@/types/storeManage/store'
 import { getStoreDetail, createStoreFiled, updateStoreFiled } from '@/api/temu'
 import { shopTypeDict, orderSyncDict, orderMarkDict, shopStatusDict } from '@/constant/storeManage/dict'
-
-// 定义 ref 的类型store
-export interface AddStoreRef {
-  onFormSubmit: () => Promise<void>
-}
-
-// 定义 props 类型
-export interface AddStoreProps {
-  act?: string
-  id?: string | number
-  [key: string]: any
-  submitCallback?: (result: any, isClose?: boolean) => void
-  setConfirmLoading?: (loading: boolean) => void
-  confirmLoading?: boolean
-  okType?: (enabled: boolean) => void
-  visible?: boolean
-  isDialog?: boolean
-}
+import type { AddStoreProps, AddStoreRef } from '@/types/storeManage/store'
 
 // 使用 forwardRef
 const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {

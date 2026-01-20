@@ -1,4 +1,3 @@
-// 使用示例
 import React, { useEffect, useState } from 'react'
 import type { ColumnsType } from 'antd/es/table'
 import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons'
@@ -18,32 +17,38 @@ import {
   type TableProps,
   Space,
   Button,
-  Tag
+  Tag,
+  Spin
 } from 'antd'
-import styles from './Temu.module.less'
-import { shopTypeDict, authStatusDict, shopStatusDict, tagDict } from '@/constant/storeManage/dict'
-import { getStoreList, delStore, updateStoreStatus, downloadLabel, delStoreLabel, updateLabel } from '@/api/temu'
+import styles from './Shein.module.less'
+import { storeTypeDict, authStatusDict, shopStatusDict } from '@/constant/storeManage/dict'
+import { getStoreList, delStore, updateStoreStatus } from '@/api/temu'
+import { getSheinRedirectUrl, setSheinAuthKey } from '@/api/shein'
+import { useSearchParams } from 'react-router-dom'
 import { getDictLabel } from '@/utils'
 import type { Dayjs } from 'dayjs'
-import type { TableDataType, SearchParams } from '@/types/storeManage/temu'
+import type { TableDataType, SearchParams } from '@/types/storeManage/shein'
 import type { PageState } from '@/types/storeManage/store'
 const { RangePicker } = DatePicker
 const { Option } = Select
 
-const TemuManage: React.FC = () => {
+const SheinManage: React.FC = () => {
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState<TableDataType[]>([])
   const [tableTotal, setTableTotal] = useState<number>(0)
-  const [tableQuery, setTableQuery] = useState<PageState>({ current: 1, pageSize: 10, salePlatformId: 23 })
+  const [tableQuery, setTableQuery] = useState<PageState>({ current: 1, pageSize: 10, salePlatformId: 28 })
   const [searchParams, setSearchParams] = useState<SearchParams>({
     keyword: '',
     status: '',
     createTime: '',
     storeType: '',
     authStatus: '',
-    storeLogoStatus: '',
     dateRangeStr: ''
   })
+  const [queryParams, setQueryParams] = useSearchParams() // 获取url参数
+  const [spinning, setSpinning] = React.useState(false)
+  const [percent, setPercent] = React.useState(0)
+
   const handleSearch = (params: any) => {
     if (params.dateRangeStr && Array.isArray(params.dateRangeStr)) {
       const [start, end] = params.dateRangeStr as [Dayjs, Dayjs]
@@ -63,7 +68,6 @@ const TemuManage: React.FC = () => {
       createTime: '',
       storeType: '',
       authStatus: '',
-      storeLogoStatus: '',
       dateRangeStr: ''
     })
   }
@@ -88,7 +92,7 @@ const TemuManage: React.FC = () => {
       dataIndex: 'storeType',
       align: 'center',
       render: (_, record: any) => {
-        return <span> {getDictLabel({ value: record.storeType, dictData: shopTypeDict })}</span>
+        return <span> {getDictLabel({ value: record.storeType, dictData: storeTypeDict })}</span>
       }
     },
     {
@@ -97,16 +101,9 @@ const TemuManage: React.FC = () => {
       align: 'center'
     },
     {
-      title: '店铺ID',
-      dataIndex: 'sellerId',
-      align: 'center',
-      render: (_, record: any) => {
-        return (
-          <a href={`https://www.temu.com/mall.html?mall_id=${record.sellerId}`} target='_blank' title='查看店铺前台'>
-            {record.sellerId || '--'}
-          </a>
-        )
-      }
+      title: '店铺代号',
+      dataIndex: 'sdsStoreCode',
+      align: 'center'
     },
     {
       title: '授权状态',
@@ -130,26 +127,16 @@ const TemuManage: React.FC = () => {
       )
     },
     {
-      title: '标签信息',
-      dataIndex: 'storeLogoFileName',
-      align: 'center',
-      render: (_, record: any) => (
-        <Button type='link' onClick={() => handleDownloadLabel(record)}>
-          {record.storeLogoFileName || '--'}
-        </Button>
-      )
-    },
-    {
       title: '创建时间',
       dataIndex: 'createTime',
       align: 'center',
-      render: (_, record: any) => <span>{record.createTime}</span>
+      render: (_, record: any) => <span>{record.createTime || '--'}</span>
     },
     {
       title: '更新时间',
       dataIndex: 'updateTime',
       align: 'center',
-      render: (_, record: any) => <span>{record.updateTime}</span>
+      render: (_, record: any) => <span>{record.updateTime || '--'}</span>
     },
     {
       title: '操作',
@@ -160,7 +147,7 @@ const TemuManage: React.FC = () => {
         <Space>
           <DialogForm
             params={{ act: 'update', id: record.id }}
-            isDrawer
+            isDrawer={false}
             component={AddStore}
             title='编辑店铺'
             width='700px'
@@ -172,23 +159,7 @@ const TemuManage: React.FC = () => {
           <Button type='link' danger onClick={() => handleDelete(record)}>
             删除
           </Button>
-          {!record.storeLogoFileUrl ? (
-            <Upload
-              showUploadList={false}
-              action='#'
-              customRequest={uploadFileRequest}
-              multiple={false}
-              maxCount={1}
-              accept='image/*'
-              data={{ storeId: record.id }}
-            >
-              <Button type='link'>上传标签</Button>
-            </Upload>
-          ) : (
-            <Button type='link' onClick={() => handleDeleteLabel(record)}>
-              删除标签
-            </Button>
-          )}
+
           {record.status == 0 && (
             <Button type='link' onClick={() => handleDisabled(record, 1)}>
               启用
@@ -199,66 +170,27 @@ const TemuManage: React.FC = () => {
               禁用
             </Button>
           )}
+          {record.authStatus !== 1 && (
+            <Button type='link' onClick={() => handleAuth(record)}>
+              授权{' '}
+            </Button>
+          )}
         </Space>
       )
     }
   ]
 
-  // 删除标签
-  const handleDeleteLabel = (params: any) => {
-    Modal.confirm({
-      title: '提示',
-      icon: <ExclamationCircleOutlined />,
-      content: `确认删除当前店铺的标签信息吗?`,
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        delStoreLabel({ id: params.id })
-        message.success('删除成功')
-        fetchData()
-      }
-    })
-  }
-  // 下载标签
-  const handleDownloadLabel = (params: any) => {
-    downloadLabel({ storeId: params.id })
-      .then((response: any) => {
-        // 创建一个新的Blob对象
-        const blob = new Blob([response])
-        // 创建一个指向该Blob的URL
-        const downloadUrl = window.URL.createObjectURL(blob)
-        // 创建一个a标签用于下载
-        const link = document.createElement('a')
-        link.href = downloadUrl
-        link.download = params.storeLogoFileName // 设置下载文件的文件名
-        document.body.appendChild(link)
-        link.click()
-        // 清除创建的URL
-        window.URL.revokeObjectURL(downloadUrl)
-        document.body.removeChild(link)
+  // 授权
+  const handleAuth = (params: any) => {
+    try {
+      getSheinRedirectUrl({ storeId: params.id }).then((data: any) => {
+        window.open(data, '_blank')
       })
-      .catch(error => {
-        console.error('Download error:', error)
-      })
-  }
-  // 上传标签
-  const MAX_FILE_SIZE = 3 * 1024 * 1024 // 5MB
-  const uploadFileRequest = (options: any) => {
-    console.log(options)
-    const { file, data } = options
-
-    if (file.size > MAX_FILE_SIZE) {
-      message.warning('文件大小超过限制，请上传小于5MB的图片')
-      return
+    } catch (error) {
+      console.log('error is:', error)
     }
-    const formData = new FormData()
-    formData.append('file', file) // 文件对象
-    formData.append('storeId', data.storeId) //店铺id
-    updateLabel(formData).then(() => {
-      message.success('上传成功')
-      fetchData()
-    })
   }
+
   // 禁用
   const handleDisabled = (params: any, statusVal: number) => {
     Modal.confirm({
@@ -296,6 +228,47 @@ const TemuManage: React.FC = () => {
       console.log(selectedRowKeys)
     }
   }
+  const clearUrlParams = () => {
+    // 获取当前页面的完整URL
+    let currentUrl = window.location.href
+    // 使用URL对象解析当前URL
+    let urlObj = new URL(currentUrl)
+    // 清除查询字符串
+    urlObj.search = ''
+    // 将修改后的URL设置为当前页面的URL
+    window.history.replaceState({}, document.title, urlObj.toString())
+  }
+  const showLoader = () => {
+    setSpinning(true)
+    let ptg = -10
+
+    const interval = setInterval(() => {
+      ptg += 5
+      setPercent(ptg)
+
+      if (ptg > 120) {
+        clearInterval(interval)
+        setSpinning(false)
+        setPercent(0)
+      }
+    }, 100)
+  }
+  const handleSetAuthKey = (params: any) => {
+    showLoader()
+    try {
+      setSheinAuthKey(params)
+        .then(res => {
+          message.success('授权成功')
+          fetchData()
+          clearUrlParams()
+        })
+        .catch(err => {
+          message.error(err.message)
+        })
+    } catch (error) {
+      console.log('error is:', error)
+    }
+  }
   useEffect(() => {
     fetchData()
   }, [tableQuery])
@@ -303,6 +276,16 @@ const TemuManage: React.FC = () => {
   useEffect(() => {
     setTableQuery({ ...tableQuery, ...searchParams })
   }, [searchParams])
+
+  useEffect(() => {
+    let reqParams = {
+      tempToken: queryParams.get('tempToken'),
+      state: queryParams.get('state')
+    }
+    if (reqParams.tempToken && reqParams.state) {
+      handleSetAuthKey(reqParams)
+    }
+  })
 
   async function fetchData() {
     setTableLoading(true)
@@ -317,6 +300,7 @@ const TemuManage: React.FC = () => {
   }
   return (
     <div className={styles['md-container']}>
+      <Spin spinning={spinning} percent={percent} fullscreen />
       <ProSearch
         labelWidth={100}
         moreQuery={true}
@@ -335,7 +319,7 @@ const TemuManage: React.FC = () => {
         <Col md={8} sm={24}>
           <Form.Item label='店铺类型' name='storeType'>
             <Select placeholder='请选择'>
-              {shopTypeDict.map(item => {
+              {storeTypeDict.map(item => {
                 return (
                   <Option value={item.value} key={item.value}>
                     {item.label}
@@ -375,20 +359,6 @@ const TemuManage: React.FC = () => {
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
-            <Form.Item label='标签信息' name='storeLogoStatus'>
-              <Select placeholder='请选择'>
-                {tagDict.map(item => {
-                  return (
-                    <Option value={item.value} key={item.value}>
-                      {item.label}{' '}
-                    </Option>
-                  )
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col md={8} sm={24}>
             <Form.Item label='创建时间' name='dateRangeStr'>
               <RangePicker
                 style={{ width: '100%' }}
@@ -402,7 +372,7 @@ const TemuManage: React.FC = () => {
       <div className={styles['md-action-row']}>
         <DialogForm
           params={{ act: 'add' }}
-          isDrawer
+          isDrawer={false}
           component={AddStore}
           title='新增店铺'
           width='700px'
@@ -434,4 +404,4 @@ const TemuManage: React.FC = () => {
   )
 }
 
-export default TemuManage
+export default SheinManage
