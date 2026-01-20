@@ -51,6 +51,7 @@ export interface TableDataType {
 export interface PageState {
   current: number
   pageSize: number
+  salePlatformId: number
 }
 export interface SearchParams {
   keyword: string
@@ -65,7 +66,7 @@ const TemuManage: React.FC = () => {
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState<TableDataType[]>([])
   const [tableTotal, setTableTotal] = useState<number>(0)
-  const [tableQuery, setTableQuery] = useState<PageState>({ current: 1, pageSize: 10 })
+  const [tableQuery, setTableQuery] = useState<PageState>({ current: 1, pageSize: 10, salePlatformId: 23 })
   const [searchParams, setSearchParams] = useState<SearchParams>({
     keyword: '',
     status: '',
@@ -189,9 +190,17 @@ const TemuManage: React.FC = () => {
       width: 220,
       render: (_, record: any) => (
         <Space>
-          <Button type='link' disabled={record.forbid} onClick={() => handleEdit(record)}>
-            编辑
-          </Button>
+          <DialogForm
+            params={{ act: 'update', id: record.id }}
+            isDrawer
+            component={AddStore}
+            title='编辑店铺'
+            width='700px'
+            onOkCallback={fetchData}
+          >
+            <Button type='link'>编辑</Button>
+          </DialogForm>
+
           <Button type='link' danger onClick={() => handleDelete(record)}>
             删除
           </Button>
@@ -226,9 +235,7 @@ const TemuManage: React.FC = () => {
       )
     }
   ]
-  const handleEdit = (record: any) => {
-    console.log('编辑', record)
-  }
+
   // 删除标签
   const handleDeleteLabel = (params: any) => {
     Modal.confirm({

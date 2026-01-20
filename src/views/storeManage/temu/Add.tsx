@@ -1,6 +1,6 @@
 // AddStore.tsx - 修复版本
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
-import { Form, Input, Select, Button, message, Row, Col, Radio } from 'antd'
+import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
+import { Form, Input, Select, Button, message, Row, Col, Radio, InputNumber } from 'antd'
 import { ShopFormState } from '@/types/storeManage/store'
 import { getStoreDetail, createStoreFiled, updateStoreFiled } from '@/api/temu'
 import { shopTypeDict, orderSyncDict, orderMarkDict, shopStatusDict } from '@/constant/storeManage/dict'
@@ -12,11 +12,9 @@ export interface AddStoreRef {
 
 // 定义 props 类型
 export interface AddStoreProps {
-  params?: {
-    act?: string
-    id?: string | number
-    [key: string]: any
-  }
+  act?: string
+  id?: string | number
+  [key: string]: any
   submitCallback?: (result: any, isClose?: boolean) => void
   setConfirmLoading?: (loading: boolean) => void
   confirmLoading?: boolean
@@ -27,12 +25,12 @@ export interface AddStoreProps {
 
 // 使用 forwardRef
 const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
-  const { params, submitCallback, setConfirmLoading, okType } = props
+  const { submitCallback, setConfirmLoading, okType } = props
   console.log('AddStore params:', props)
 
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<ShopFormState>({
     storeTitle: '',
     storeType: undefined,
     status: undefined,
@@ -43,12 +41,12 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
     accessTokenGlobal: '',
     accessTokenEu: '',
     syncOrder: undefined,
-    syncOrderDay: '',
+    syncOrderDay: undefined,
     deliveryType: undefined,
-    autoDeliveryHour: ''
+    autoDeliveryHour: undefined
   })
   // 初始化 - 启用确定按钮
-  React.useEffect(() => {
+  useEffect(() => {
     okType?.(true)
   }, [okType])
 
@@ -56,9 +54,28 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
   useImperativeHandle(ref, () => ({
     onFormSubmit: async () => {
       console.log('AddStore.onFormSubmit 被调用')
-      return handleSubmit()
+      handleSubmit()
     }
   }))
+
+  const fetchShopInfo = async () => {
+    try {
+      const result = await getStoreDetail({ id: props.id })
+      setFormState(result)
+      form.setFieldsValue(result)
+    } catch (error: any) {
+      message.error(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    // 获取详情数据
+    if (props.act === 'update') {
+      fetchShopInfo()
+    }
+  }, [props.id])
 
   const formItemLayout = {
     labelCol: { span: 5 },
@@ -67,28 +84,20 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
   // 表单提交处理
   const handleSubmit = async () => {
     try {
-      console.log('开始表单验证...')
       const values = await form.validateFields()
-      console.log('表单验证通过，值:', values)
 
       // 设置加载状态
       setConfirmLoading?.(true)
       setLoading(true)
 
-      // 模拟 API 调用
-      console.log('模拟 API 调用...')
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // API 调用
+      const result =
+        props.act === 'update'
+          ? await updateStoreFiled({ id: props.id, ...values, salePlatformId: 23 })
+          : await createStoreFiled({ ...values, salePlatformId: 23 })
 
       // 提交成功
-      const result = {
-        success: true,
-        code: 0,
-        message: '操作成功',
-        data: {
-          id: Date.now(),
-          ...values
-        }
-      }
+      message.success('操作成功')
 
       console.log('提交成功，结果:', result)
 
@@ -199,7 +208,7 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
         {/* 条件渲染：当 storeType 为 0 时 */}
         {formState.storeType === 0 && (
           <>
-            <Form.Item label='订单美区(us)Token'>
+            <Form.Item label='订单美区(us)Token' name='accessTokenUs'>
               <Input
                 placeholder='请输入订单美区(us)token'
                 className='tig-input'
@@ -208,7 +217,7 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
               />
             </Form.Item>
 
-            <Form.Item label='订单全球(glb)Token'>
+            <Form.Item label='订单全球(glb)Token' name='accessTokenGlobal'>
               <Input
                 placeholder='请输入订单全球(glb)token'
                 className='tig-input'
@@ -217,7 +226,7 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
               />
             </Form.Item>
 
-            <Form.Item label='订单欧区(eu)Token'>
+            <Form.Item label='订单欧区(eu)Token' name='accessTokenEu'>
               <Input
                 placeholder='请输入订单欧区(eu)token'
                 className='tig-input'
@@ -229,7 +238,7 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
         )}
 
         {/* 订单同步 */}
-        <Form.Item label='订单同步'>
+        <Form.Item label='订单同步' name='syncOrder'>
           <Radio.Group
             value={formState.syncOrder}
             onChange={e => setFormState({ ...formState, syncOrder: e.target.value })}
@@ -250,15 +259,16 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
             rules={[{ required: true, message: '订单同步时间不能为空!' }]}
           >
             <Row gutter={20} align='middle'>
-              <Col span={4}>
+              <Col span={3}>
                 <div style={{ color: 'rgba(0, 0, 0, 0.85)' }}>同步近</div>
               </Col>
-              <Col span={5}>
-                <Input
-                  type='number'
+              <Col span={6}>
+                <InputNumber
                   placeholder='请输入订单同步时间'
-                  value={formState.syncOrderDay}
-                  onChange={e => setFormState({ ...formState, syncOrderDay: e.target.value })}
+                  min={1}
+                  max={100}
+                  value={formState.syncOrderDay ?? undefined} // 使用空值合并运算符
+                  onChange={value => setFormState({ ...formState, syncOrderDay: Number(value) || undefined })}
                   style={{ width: '100%' }}
                 />
               </Col>
@@ -298,19 +308,20 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
           rules={[{ required: true, message: '自动发货时间不能为空!' }]}
         >
           <Row gutter={24} align='middle'>
-            <Col span={6}>
+            <Col span={5}>
               <div style={{ color: 'rgba(0, 0, 0, 0.85)' }}>单号生成后</div>
             </Col>
-            <Col span={10}>
-              <Input
-                type='number'
+            <Col span={12}>
+              <InputNumber
+                min={1}
+                max={100}
                 placeholder='请输入自动发货时间'
-                value={formState.autoDeliveryHour}
-                onChange={e => setFormState({ ...formState, autoDeliveryHour: e.target.value })}
+                value={formState.autoDeliveryHour ?? undefined} // 使用空值合并运算符
+                onChange={value => setFormState({ ...formState, autoDeliveryHour: Number(value) || undefined })}
                 style={{ width: '100%' }}
               />
             </Col>
-            <Col span={8}>
+            <Col span={7}>
               <div style={{ color: 'rgba(0, 0, 0, 0.85)' }}>小时自动发货</div>
             </Col>
           </Row>
