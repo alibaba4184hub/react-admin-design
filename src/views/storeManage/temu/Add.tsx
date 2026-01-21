@@ -98,6 +98,7 @@ const AddStore = forwardRef<AddStoreRef, AddStoreProps>((props, ref) => {
       if (error.errorFields && error.errorFields.length > 0) {
         // 表单验证错误
         message.error('请正确填写表单')
+        return
       }
 
       const errorResult = {

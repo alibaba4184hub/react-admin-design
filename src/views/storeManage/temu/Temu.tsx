@@ -5,6 +5,7 @@ import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { ProSearch, ProSearchMore } from '@/components/ProSearch'
 import { DialogForm } from '@/components/dialog'
 import AddStore from './Add'
+import Test from './Test'
 import {
   Input,
   DatePicker,
@@ -406,6 +407,18 @@ const TemuManage: React.FC = () => {
         >
           <Button type='primary' icon={<PlusOutlined />}>
             新增店铺
+          </Button>
+        </DialogForm>
+        <DialogForm
+          params={{ act: 'add' }}
+          isDrawer
+          component={Test}
+          title='新增店铺'
+          width='700px'
+          onOkCallback={fetchData}
+        >
+          <Button type='primary' icon={<PlusOutlined />}>
+            测试店铺
           </Button>
         </DialogForm>
       </div>

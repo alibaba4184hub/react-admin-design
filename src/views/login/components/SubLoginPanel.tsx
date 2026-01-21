@@ -13,6 +13,7 @@ import { resetState } from '@/stores/modules/user'
 import { useMessage } from '@/hooks/web/useMessage'
 import { useAppDispatch } from '@/stores'
 import { TOKEN_KEY } from '@/enums/cacheEnum'
+import classNames from 'classnames'
 interface PropState {
   loading: boolean
   userInfo: any
@@ -107,7 +108,9 @@ const SubLoginPanel: FC<PropState> = props => {
       {/* 店铺列表 */}
       {myShopList.length > 0 && (
         <div
-          className={`${styles['sub-login-panel__list']} ${vendorList.length === 0 ? styles['shop-list-min-height'] : ''}`}
+          className={classNames(styles['sub-login-panel__list'], {
+            [styles['shop-list-min-height']]: vendorList.length === 0
+          })}
         >
           {!loading &&
             myShopList.map(item => (
@@ -128,9 +131,9 @@ const SubLoginPanel: FC<PropState> = props => {
       {/* 供应商列表 */}
       {vendorList.length > 0 && (
         <div
-          className={`${styles['sub-login-panel__list']} ${styles['shop-list-min-height']} ${
-            myShopList.length > 0 ? styles.top : ''
-          }`}
+          className={classNames(styles['sub-login-panel__list'], styles['shop-list-min-height'], {
+            [styles.top]: myShopList.length > 0
+          })}
         >
           {!loading &&
             vendorList.map(item => (
