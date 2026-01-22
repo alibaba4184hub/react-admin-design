@@ -3,6 +3,7 @@ import type { Dayjs } from 'dayjs'
 export interface TableDataType {
   id: string
   images: { url: string }[]
+  productName: string // 商品名称
   categoryName: string
   variant: { color: string; size: string }[]
   releaseStoreList: { storeTitle: string }[]

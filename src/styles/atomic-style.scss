@@ -1,0 +1,437 @@
+/* 通过flex属性获取类名标识 */
+@function get-flex-name-by-attr($n) {
+  $name: $n;
+  @if ($n == flex-start) {
+    $name: start;
+  } @else if ($n == flex-end) {
+    $name: end;
+  } @else if ($n == space-between) {
+    $name: between;
+  } @else if ($n == space-around) {
+    $name: around;
+  } @else if ($n == space-evenly) {
+    $name: evenly;
+  }
+  @return $name;
+}
+
+/* 宽高尺寸 */
+.w-0 {
+  width: 0px;
+}
+.w-full {
+  width: 100%;
+}
+.w-screen {
+  width: 100vw;
+}
+
+.min-w-full {
+  min-width: 100%;
+}
+.max-w-full {
+  max-width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+.h-screen {
+  height: 100vh;
+}
+
+.min-h-full {
+  min-height: 100%;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.max-h-full {
+  max-height: 100%;
+}
+.max-h-screen {
+  max-height: 100vh;
+}
+
+/* 边距 */
+@for $i from 0 through 100 {
+  $size: $i * 5;
+  .pt-#{$size} {
+    padding-top: $size * 1px;
+  }
+  .pr-#{$size} {
+    padding-right: $size * 1px;
+  }
+  .pb-#{$size} {
+    padding-bottom: $size * 1px;
+  }
+  .pl-#{$size} {
+    padding-left: $size * 1px;
+  }
+  .px-#{$size} {
+    padding-left: $size * 1px;
+    padding-right: $size * 1px;
+  }
+  .py-#{$size} {
+    padding-top: $size * 1px;
+    padding-bottom: $size * 1px;
+  }
+  .p-#{$size} {
+    padding: $size * 1px;
+  }
+  .mt-#{$size} {
+    margin-top: $size * 1px;
+  }
+  .mr-#{$size} {
+    margin-right: $size * 1px;
+  }
+  .mb-#{$size} {
+    margin-bottom: $size * 1px;
+  }
+  .ml-#{$size} {
+    margin-left: $size * 1px;
+  }
+  .mx-#{$size} {
+    margin-left: $size * 1px;
+    margin-right: $size * 1px;
+  }
+  .my-#{$size} {
+    margin-top: $size * 1px;
+    margin-bottom: $size * 1px;
+  }
+  .m-#{$size} {
+    margin: $size * 1px;
+  }
+}
+
+/* 布局 */
+$display-attrs: block, inline-block, inline, flex, inline-flex, grid,
+  inline-grid, contents, list-item, none;
+@each $attr in $display-attrs {
+  @if ($attr ==none) {
+    .hidden {
+      display: $attr;
+    }
+  } @else {
+    .#{$attr} {
+      display: $attr;
+    }
+  }
+}
+
+/* 弹性布局 */
+.flex-1 {
+  flex: 1;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-col-reverse {
+  flex-direction: column-reverse;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.grow {
+  flex-grow: 1;
+}
+.grow-0 {
+  flex-grow: 0;
+}
+.shrink {
+  flex-shrink: 1;
+}
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+$align-content-attrs: flex-start, flex-end, center, space-between, space-around,
+  space-evenly;
+@each $attr in $align-content-attrs {
+  $name: get-flex-name-by-attr($attr);
+  .justify-#{$name} {
+    justify-content: $attr;
+  }
+  .content-#{$name} {
+    align-content: $attr;
+  }
+}
+
+$justify-item-attrs: start, end, center, stretch;
+@each $attr in $justify-item-attrs {
+  .justify-items-#{$attr} {
+    justify-items: $attr;
+  }
+  .justify-self-#{$attr} {
+    justify-self: $attr;
+  }
+}
+
+$align-item-attrs: flex-start, flex-end, center, baseline, stretch;
+@each $attr in $align-item-attrs {
+  $name: get-flex-name-by-attr($attr);
+  .items-#{$name} {
+    align-items: $attr;
+  }
+  .self-#{$name} {
+    align-self: $attr;
+  }
+}
+
+/* visibility */
+.visible {
+  visibility: visible;
+}
+.invisible {
+  visibility: hidden;
+}
+
+/* 浮动 */
+.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
+.float-none {
+  float: none;
+}
+
+.clear-left {
+  clear: left;
+}
+.clear-right {
+  clear: right;
+}
+.clear-both {
+  clear: both;
+}
+.clear-none {
+  clear: none;
+}
+
+/* overflow */
+$overflow-attrs: auto, hidden, clip, visible, scroll;
+@each $attr in $overflow-attrs {
+  .overflow-#{$attr} {
+    overflow: $attr;
+  }
+  .overflow-x-#{$attr} {
+    overflow-x: $attr;
+  }
+  .overflow-y-#{$attr} {
+    overflow-y: $attr;
+  }
+}
+
+/* 定位 */
+.static {
+  position: static;
+}
+.fixed {
+  position: fixed;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0px;
+}
+.right-0 {
+  right: 0px;
+}
+.bottom-0 {
+  bottom: 0px;
+}
+.left-0 {
+  left: 0px;
+}
+
+@each $val in 0, 10, 100, 1000 {
+  .z-#{$val} {
+    z-index: $val;
+  }
+}
+
+/* 文本 */
+@for $i from 6 through 30 {
+  $size: $i * 2;
+  .text-#{$size} {
+    font-size: $size * 1px;
+  }
+}
+
+@for $i from 1 through 9 {
+  $weight: $i * 100;
+  .bold-#{$weight} {
+    font-weight: $weight;
+  }
+}
+
+.line-h-none {
+  line-height: 1;
+}
+
+$text-align-attrs: left, right, center, justify, start, end;
+@each $attr in $text-align-attrs {
+  .text-#{$attr} {
+    text-align: $attr;
+  }
+}
+
+$text-vertical-attrs: baseline, top, middle, bottom, text-top, text-bottom, sub,
+  super;
+@each $attr in $text-vertical-attrs {
+  .align-#{$attr} {
+    vertical-align: $attr;
+  }
+}
+
+.underline {
+  text-decoration-line: underline;
+}
+.overline {
+  text-decoration-line: overline;
+}
+.line-through {
+  text-decoration-line: line-through;
+}
+.no-underline {
+  text-decoration-line: none;
+}
+
+.decoration-solid {
+  text-decoration-style: solid;
+}
+.decoration-double {
+  text-decoration-style: double;
+}
+.decoration-dotted {
+  text-decoration-style: dotted;
+}
+.decoration-dashed {
+  text-decoration-style: dashed;
+}
+.decoration-wavy {
+  text-decoration-style: wavy;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@each $i in none, text, all, auto {
+  .select-#{$i} {
+    user-select: $i;
+  }
+}
+/* 边框 */
+.rounded-none {
+  border-radius: 0px;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.border-none {
+  border-width: 0;
+}
+.border-t-none {
+  border-top-width: 0;
+}
+.border-r-none {
+  border-right-width: 0;
+}
+.border-b-none {
+  border-bottom-width: 0;
+}
+.border-l-none {
+  border-left-width: 0;
+}
+.border-x-none {
+  border-left-width: 0;
+  border-right-width: 0;
+}
+.border-y-none {
+  border-top-width: 0;
+  border-bottom-width: 0;
+}
+
+.border-solid {
+  border-style: solid;
+}
+.border-dashed {
+  border-style: dashed;
+}
+.border-dotted {
+  border-style: dotted;
+}
+.border-double {
+  border-style: double;
+}
+
+/* 透明度 */
+@for $i from 0 to 10 {
+  $opacity: $i * 0.1;
+  $name: $i * 10;
+  .opacity-#{$name} {
+    opacity: $opacity;
+  }
+}
+
+/* 转换 */
+@each $i in 0 50 75 100 125 150 {
+  $scale: $i * 0.01;
+  .scale-#{$i} {
+    transform: scale($scale);
+  }
+  .scale-x-#{$i} {
+    transform: scaleX($scale);
+  }
+  .scale-y-#{$i} {
+    transform: scaleY($scale);
+  }
+}
+
+@each $i in 0 15 30 45 90 180 {
+  .rotate-#{$i} {
+    transform: rotate($i * 1deg);
+  }
+}
+
+/* 光标样式 */
+$cursors: auto, default, pointer, wait, text, move, help, not-allowed, none,
+  context-menu, progress, cell, crosshair, vertical-text, alias, copy, no-drop,
+  grab, grabbing, all-scroll, col-resize, row-resize, n-resize, e-resize,
+  s-resize, w-resize, ne-resize, nw-resize, se-resize, sw-resize, ew-resize,
+  ns-resize, nesw-resize, nwse-resize, zoom-in, zoom-out;
+@each $cursor in $cursors {
+  .cursor-#{$cursor} {
+    cursor: $cursor;
+  }
+}

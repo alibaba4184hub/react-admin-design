@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from './stores'
 import App from './App'
 import '@/design/index.less'
+import '@/styles/atomic-style.scss'
 
 // register svg icon
 import 'virtual:svg-icons-register'
