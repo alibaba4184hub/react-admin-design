@@ -12,15 +12,13 @@ const baseURL = `${VITE_BASE_URL}${prefix}`
 const service = axios.create({
   baseURL: baseURL,
   timeout: 10 * 1000,
-  headers: () => {
-    return {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + getToken(),
-      'X-Shop-Id': localStorage.getItem('shopId') || 0,
-      'X-Vendor-Id': localStorage.getItem('vendorId') || 0,
-      'X-ADMIN-TYPE': localStorage.getItem('adminType') || 'admin',
-      'X-ClIENT-TYPE': 'admin'
-    }
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer ' + getToken(),
+    'X-Shop-Id': localStorage.getItem('shopId') || 0,
+    'X-Vendor-Id': localStorage.getItem('vendorId') || 0,
+    'X-ADMIN-TYPE': localStorage.getItem('adminType') || 'admin',
+    'X-ClIENT-TYPE': 'admin'
   }
 })
 
