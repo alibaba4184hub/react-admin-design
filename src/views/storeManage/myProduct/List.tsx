@@ -6,6 +6,8 @@ import { DialogForm } from '@/components/dialog'
 import type { Dayjs } from 'dayjs'
 import classNames from 'classnames'
 import EditProduct from './EditProduct'
+// 使用示例：命令式 API 使用
+import { proProgressBar } from '@/components/ProProgressBar'
 import {
   Input,
   DatePicker,
@@ -356,6 +358,14 @@ const List: FC = () => {
     }
   }
   const handleDownload = async (record: TableDataType) => {
+    // 创建进度条实例
+    console.log('proProgressBar', proProgressBar)
+    const progress = proProgressBar.start({
+      progressText: '开始自动加载...',
+      autoLoad: true,
+      autoLoadSpeed: 1000
+    })
+
     try {
       const data = await downloadProductImages({ id: record.id })
       const result = await downloadBlob(data, `${record?.productName}-效果图.zip`)
@@ -363,13 +373,19 @@ const List: FC = () => {
         message.error('导出失败')
         return
       }
-    } catch (error) {}
+      // 完成
+      proProgressBar.finish()
+    } catch (error) {
+      // 失败
+      proProgressBar.fail()
+    }
   }
   //  删除商品
   const handleDelete = (record: TableDataType) => {
     Modal.confirm({
       title: '提示',
       icon: <ExclamationCircleOutlined />,
+      width: 440,
       content: (
         <>
           <div>确认删除成品？</div>

@@ -11,7 +11,7 @@ const baseURL = `${VITE_BASE_URL}${prefix}`
 // Create axios instance
 const service = axios.create({
   baseURL: baseURL,
-  timeout: 10 * 1000,
+  timeout: 60 * 1000 * 1000,
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + getToken(),

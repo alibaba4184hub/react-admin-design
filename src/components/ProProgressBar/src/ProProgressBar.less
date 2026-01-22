@@ -1,0 +1,132 @@
+/* ProProgressBar.css - 添加新样式 */
+.bar-content {
+  width: 500px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 3rem 0;
+  background: #ffffff;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.progress-bar-box {
+  position: relative;
+  width: 400px;
+}
+
+.progress-bar-gradient {
+  background: #f1f1f1;
+  box-shadow: inset 0px 1px 2px 0px rgba(135, 135, 135, 0.5);
+}
+
+.progress-bar-stripe {
+  padding: 2px;
+  background: #ffeeee;
+  box-shadow: inset 0px 1px 2px 0px rgba(255, 174, 174, 0.5);
+}
+
+.progress-bar-stripe .progress-bar {
+  background-size: 20px 20px;
+  animation: panoramic 30s linear infinite;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: inherit;
+  transition:
+    width 0.2s ease,
+    opacity 0.4s ease;
+}
+
+.progress-text {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #505255;
+  letter-spacing: 0;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.progress-percent {
+  display: inline-block;
+  color: #ff6948;
+  margin-left: 6px;
+}
+
+.progress-tip {
+  display: inline-block;
+}
+
+.auto-load-indicator {
+  display: inline-block;
+  font-size: 12px;
+  color: #999;
+  margin-left: 8px;
+  font-style: italic;
+}
+
+.progress-status-point {
+  position: absolute;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-image: linear-gradient(0deg, #ff6b48 0%, #ff9946 54%, #ffb944 100%);
+  box-shadow: 0px 3px 5px 0px rgba(7, 6, 6, 0.5);
+  transition:
+    left 0.1s ease-in-out,
+    right 0.1s ease-in-out;
+  z-index: 10;
+}
+
+.progress-status-point::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #ffffff;
+  z-index: 222;
+}
+
+.icon-prefix {
+  vertical-align: middle;
+  width: 14px;
+  margin-right: 4px;
+}
+
+@keyframes panoramic {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* 模态框样式覆盖 */
+.pro-progress-bar-modal .ant-modal-content {
+  background: transparent;
+  box-shadow: none;
+}
+
+.pro-progress-bar-modal .ant-modal-body {
+  padding: 0;
+  background: transparent;
+}
+
+.pro-progress-bar-modal .ant-modal-close {
+  color: #fff;
+}
+
+.pro-progress-bar-modal .ant-modal-close:hover {
+  color: #fff;
+  opacity: 0.8;
+}
