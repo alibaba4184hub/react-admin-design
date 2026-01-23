@@ -437,6 +437,7 @@ export const createProgressBar = (config?: Partial<ProProgressBarProps>): Progre
       currentState.percent >= currentState.options.autoLoadMaxPercent!
     )
       return
+    debugger
 
     isAutoLoading = true
 
@@ -464,7 +465,7 @@ export const createProgressBar = (config?: Partial<ProProgressBarProps>): Progre
       clearInterval(autoLoadTimer)
     }
     // 设置定时器
-    autoLoadTimer = setInterval(step, currentState.options.autoLoadSpeed!)
+    autoLoadTimer = setInterval(step, currentState.options.autoLoadSpeed)
   }
 
   const stopAutoLoadInternal = () => {

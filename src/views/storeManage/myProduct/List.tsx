@@ -6,6 +6,8 @@ import { DialogForm } from '@/components/dialog'
 import type { Dayjs } from 'dayjs'
 import classNames from 'classnames'
 import EditProduct from './EditProduct'
+import ViewSku from './ViewSku'
+import ImageDetail from './ImageDetail'
 // 使用示例：命令式 API 使用
 import { proProgressBar } from '@/components/ProProgressBar'
 import {
@@ -77,12 +79,36 @@ const List: FC = () => {
                 <>
                   <Image width={260} preview={false} height={'auto'} src={record.images[0].url} />
                   <div className={styles['md-action-row']}>
-                    <Button type='link' iconPosition={'end'} icon={<RightOutlined />}>
-                      查看效果图
-                    </Button>
-                    <Button type='link' iconPosition={'end'} icon={<RightOutlined />}>
-                      查看SKU
-                    </Button>
+                    <DialogForm
+                      params={{ productPicList: record.variant || [record] }}
+                      isDrawer={false}
+                      showOnOk={false}
+                      component={ImageDetail}
+                      cancelText='关闭'
+                      title='查看效果图'
+                      width='660px'
+                      bodyStyle={{ height: '75vh' }}
+                      onOkCallback={() => {}}
+                    >
+                      <Button type='link' iconPosition={'end'} icon={<RightOutlined />}>
+                        查看效果图
+                      </Button>
+                    </DialogForm>
+                    <DialogForm
+                      params={{ data: record.variant || [record] }}
+                      isDrawer={false}
+                      showOnOk={false}
+                      component={ViewSku}
+                      cancelText='关闭'
+                      title='查看SKU'
+                      width='700px'
+                      bodyStyle={{ height: '75vh', overflowY: 'auto' }}
+                      onOkCallback={fetchData}
+                    >
+                      <Button type='link' iconPosition={'end'} icon={<RightOutlined />}>
+                        查看SKU
+                      </Button>
+                    </DialogForm>
                   </div>
                 </>
               }
@@ -195,9 +221,19 @@ const List: FC = () => {
           <Button type='link' onClick={() => handleDownload(record)}>
             下载效果图
           </Button>
-          <Button type='link' onClick={() => handleView(record)}>
-            查看SKU
-          </Button>
+          <DialogForm
+            params={{ data: record.variant || [record] }}
+            isDrawer={false}
+            showOnOk={false}
+            component={ViewSku}
+            cancelText='关闭'
+            title='查看SKU'
+            width='700px'
+            bodyStyle={{ height: '75vh', overflowY: 'auto' }}
+            onOkCallback={fetchData}
+          >
+            <Button type='link'>查看SKU</Button>
+          </DialogForm>
         </Space>
       )
     }
@@ -409,8 +445,6 @@ const List: FC = () => {
       }
     })
   }
-  //   查看sku
-  const handleView = (record: TableDataType) => {}
 
   const handleSearch = (params: any) => {
     if (params.createTime && Array.isArray(params.createTime)) {
