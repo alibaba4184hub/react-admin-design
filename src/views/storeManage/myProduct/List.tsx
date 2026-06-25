@@ -155,6 +155,7 @@ const List: FC = () => {
       title: '商品属性',
       dataIndex: 'variant',
       align: 'left',
+      width: 130,
       render: (_, record: any) => {
         return (
           <>
